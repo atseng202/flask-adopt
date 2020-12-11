@@ -18,7 +18,7 @@ class Pet(db.Model):
     """ Pet model """
     
     __tablename__ = 'pets'
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable=False)
     species = db.Column(db.Text, nullable=False)
