@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block title %} Pets for Adoption {% endblock %} 
+
+{% block content %}
+<h1>Pets</h1>
+{% for pet in pets %}
+<div>
+  <img src="{{pet.photo_url}}" alt="{{pet.name}}'s photo" />
+  <p>
+    <a href="/{{pet.id}}">{{pet.name}}</a> is
+    <b>
+      <!-- {% if pet.available %} available! {% endif %} {% if not pet.available %} -->
+      <!-- not available :) {% endif %}</b> -->
+      <!-- Refactored conditional above-->
+      {{"available" if pet.available else "not available :)"}}
+  </p>
+</div>
+{% endfor %}
+
+<!-- No need to use form button if just linking to new route -->
+<a href="/add">Add a Pet</a>
+{% endblock %}

@@ -6,6 +6,10 @@
   <title>{% block title %} {% endblock %}</title>
 </head>
 <body>
+  <!-- Include flash messages here -->
+  {% for msg in get_flashed_messages() %}
+    <p>{{ msg }}</p>
+  {% endfor %}
 
   {% block content %} <!-- Content goes here -->  {% endblock %}
 </body>

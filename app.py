@@ -29,7 +29,7 @@ def show_all_pets():
     """ List all the pets at root path """
 
     pets = Pet.query.all()
-    return render_template("pets.html", pets=pets)
+    return render_template("show_pets.html", pets=pets)
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -49,9 +49,10 @@ def add_pet():
         db.session.add(pet)
         db.session.commit()
 
+        flash(f"Added {pet.name} the {pet.species}")
         return redirect("/")
     else:
-        return render_template("form-new-pet.html", form=form)
+        return render_template("add_pet_form.html", form=form)
 
 @app.route("/<int:pet_id>", methods=["GET", "POST"])
 def show_pet(pet_id):
@@ -66,8 +67,9 @@ def show_pet(pet_id):
         pet.available = form.available.data
         db.session.commit()
 
+        flash(f"{pet.name} updated!")
         return redirect(f"/{pet_id}")
     else:
-        return render_template('pet.html', form=form, pet=pet)
+        return render_template('show_pet.html', form=form, pet=pet)
 
    
