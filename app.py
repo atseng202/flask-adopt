@@ -4,6 +4,9 @@ from flask import Flask, render_template, redirect, flash, request
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, Pet
 from forms import AddPetForm, EditPetForm
+import requests
+
+from project_secrets import CLIENT_ID, SECRET_KEY
 
 app = Flask(__name__)
 
@@ -15,6 +18,10 @@ app.config["SQLALCHEMY_ECHO"] = True
 
 connect_db(app)
 db.create_all()
+
+PETFINDER_AUTH_PATH = "https://api.petfinder.com/v2/oauth2/token"
+
+auth_token = None
 
 # Having the Debug Toolbar show redirects explicitly is often useful;
 # however, if you want to turn it off, you can uncomment this line:
@@ -72,4 +79,22 @@ def show_pet(pet_id):
     else:
         return render_template('show_pet.html', form=form, pet=pet)
 
-   
+#    Routes to authenticate with Petfinder API
+
+@app.before_first_request
+def refresh_credentials():
+    """ Get token once and store it globally """
+    global auth_token
+    auth_token = update_auth_token_string()
+
+def update_auth_token_string():
+    """ Authenticates with Petfinder API for an OAuth token and returns it """
+
+    resp = requests.post(PETFINDER_AUTH_PATH, data={
+        "grant_type": "client_credentials",
+        "client_id": CLIENT_ID,
+        "client_secret": SECRET_KEY
+    })
+
+
+    return resp.json()["access_token"]
